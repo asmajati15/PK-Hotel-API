@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\ContactController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,3 +25,9 @@ Route::post('room', [RoomController::class, 'store']);
 Route::get('/room/{id}', [RoomController::class, 'show']);
 Route::put('/room/{id}', [RoomController::class, 'update']);
 Route::delete('/room/{id}', [RoomController::class, 'destroy']);
+
+Route::get('contact', [ContactController::class, 'index']);
+Route::post('contact', [ContactController::class, 'store']);
+Route::get('/contact/{id}', [ContactController::class, 'show']);
+Route::put('/contact/{id}', [ContactController::class, 'update']);
+Route::delete('/contact/{id}', [ContactController::class, 'destroy']);

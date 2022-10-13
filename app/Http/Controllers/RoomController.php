@@ -40,7 +40,6 @@ class RoomController extends Controller
         $room->type = $request->type;
         $room->description = $request->description;
         $room->price = $request->price;
-        $room->type = $request->type;
         $saved = $room->save();
 
         if ($saved) {
@@ -58,8 +57,8 @@ class RoomController extends Controller
      */
     public function show($id)
     {
-        $room = Room::find($id);
-        return response()->json(['data' => $room], 302);
+        $room = Room::where('id', $id)->first();
+        return response()->json(['data' => $room], 200);
     }
 
     /**
