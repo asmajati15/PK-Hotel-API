@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Room;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Redirect;
 
 class RoomController extends Controller
 {
@@ -36,17 +39,41 @@ class RoomController extends Controller
      */
     public function store(Request $request)
     {
-        $room = new Room;
-        $room->type = $request->type;
-        $room->description = $request->description;
-        $room->price = $request->price;
-        $saved = $room->save();
+        $validated = Validator::make($request->all(),[
+            'type' =>'required',
+            'description' =>'required',
+            'price' =>'required',
+        ]);
 
-        if ($saved) {
-            return response()->json(['message' => 'Room added successfully.'], 201);
-        } else {
-            return response()->json(['message' => 'Something went wrong.'], 500);
+        if ($validated->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'validation error',
+                'errors' => $validated->errors()
+            ], 401);
+
+        $room = Room::create([
+            'type'=>$request->type,
+            'description'=>$request->description,
+            'price'=>$request->price
+        ]);
+                
+            return response()->json([
+                'message' => 'room created Successfuly',
+                'room' => $room
+            ],200);
         }
+        /* $room = new Room;
+            $room->type = $request->type;
+            $room->description = $request->description;
+            $room->price = $request->price;
+            $saved = $room->save();
+
+            if ($saved) {
+                return response()->json(['message' => 'Room added successfully.'], 201);
+            } else {
+                return response()->json(['message' => 'Something went wrong.'], 500);
+        } */
     }
 
     /**
@@ -81,6 +108,31 @@ class RoomController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // $validated = Validator::make($request->all(),[
+        //     'type' =>'required',
+        //     'description' =>'required',
+        //     'price' =>'required',
+        // ]);
+
+        // if ($validated->fails()) {
+        //     return response()->json([
+        //         'status' => false,
+        //         'message' => 'validation error',
+        //         'errors' => $validated->errors()
+        //     ], 401);
+
+        // $room = Room::create($id, [
+        //     'type'=>$request->type,
+        //     'description'=>$request->description,
+        //     'price'=>$request->price
+        // ]);
+                
+        //     return response()->json([
+        //         'message' => 'room created Successfuly',
+        //         'room' => $room
+        //     ],200);
+        // }
+
         $type = $request->type;
         $description = $request->description;
         $price = $request->price;
@@ -91,12 +143,12 @@ class RoomController extends Controller
         $room->price = $price;
         $room->save();
 
-        // $room->save([
-        //     'type' => $request->type,
-        //     'description' => $request->description,
-        //     'price' => $request->price,
-        //     'type' => $request->type
-        // ]);
+        $room->save([
+            'type' => $request->type,
+            'description' => $request->description,
+            'price' => $request->price,
+            'type' => $request->type
+        ]);
         return response()->json(['message' => 'Room updated successfully.'], 201);
     }
 
